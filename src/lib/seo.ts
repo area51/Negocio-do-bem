@@ -10,8 +10,7 @@ import { nomeOficial } from "@/lib/municipios";
 
 /**
  * Endereço público do site, sem barra no final, para os links absolutos (canônico,
- * sitemap, imagens de compartilhamento). No Vercel é o domínio de produção, até
- * nos previews, para os buscadores conhecerem um endereço só. Fora dele, o APP_URL.
+ * sitemap, imagens de compartilhamento). APP_URL é o domínio público canônico.
  */
 export const ENDERECO_DO_SITE = (
   process.env.VERCEL_PROJECT_PRODUCTION_URL
@@ -19,8 +18,12 @@ export const ENDERECO_DO_SITE = (
     : process.env.APP_URL || "http://localhost:3000"
 ).replace(/\/+$/, "");
 
-/** Só a produção entra nos buscadores. Previews do Vercel ficam de fora. */
-export const INDEXAVEL = process.env.VERCEL_ENV ? process.env.VERCEL_ENV === "production" : process.env.NODE_ENV === "production";
+/** Só a produção entra nos buscadores; previews ficam de fora. */
+export const INDEXAVEL = process.env.DEPLOY_ENV
+  ? process.env.DEPLOY_ENV === "production"
+  : process.env.VERCEL_ENV
+    ? process.env.VERCEL_ENV === "production"
+    : process.env.NODE_ENV === "production";
 
 export const NOME_DO_SITE = "Negócio do Bem";
 
