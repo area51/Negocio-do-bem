@@ -2,6 +2,7 @@
 // como o Google e o Bing, e para assistentes que buscam na web (ChatGPT, Perplexity).
 
 import type { Metadata } from "next";
+import { ambienteDeDeploy } from "@/lib/ambiente";
 import { hrefCidade } from "@/lib/diretorio";
 import { REPOSITORIO } from "@/lib/dominio";
 import { ehFotoDoSite } from "@/lib/fotos";
@@ -19,11 +20,7 @@ export const ENDERECO_DO_SITE = (
 ).replace(/\/+$/, "");
 
 /** Só a produção entra nos buscadores; previews ficam de fora. */
-export const INDEXAVEL = process.env.DEPLOY_ENV
-  ? process.env.DEPLOY_ENV === "production"
-  : process.env.VERCEL_ENV
-    ? process.env.VERCEL_ENV === "production"
-    : process.env.NODE_ENV === "production";
+export const INDEXAVEL = ambienteDeDeploy() ? ambienteDeDeploy() === "production" : process.env.NODE_ENV === "production";
 
 export const NOME_DO_SITE = "Negócio do Bem";
 

@@ -9,6 +9,7 @@
 
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
+import { ambienteDeDeploy } from "@/lib/ambiente";
 import { db } from "@/lib/db";
 import { enviarEmail, envioLigado } from "@/lib/email";
 import { corpo, primeiroNome } from "@/lib/notificacoes";
@@ -118,7 +119,7 @@ export function urlDoLink(token: string): string {
 export async function enviarLink(conta: Conta, finalidade: Finalidade, token: string): Promise<void> {
   const url = urlDoLink(token);
   if (!envioLigado()) {
-    if ((process.env.DEPLOY_ENV || process.env.VERCEL_ENV) !== "production") {
+    if (ambienteDeDeploy() !== "production") {
       console.info(`[e-mail desligado] Link para ${finalidade} da conta ${conta.email}: ${url}`);
     }
     return;

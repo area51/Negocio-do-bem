@@ -23,7 +23,7 @@ describe("guardarFoto e apagarFoto", () => {
     vi.stubEnv("NEXT_PUBLIC_R2_PUBLIC_URL", "https://fotos.exemplo.com");
 
     const url = await guardarFoto(FOTO, "perfis");
-    expect(put).toHaveBeenCalledWith(expect.stringMatching(/^perfis\/[0-9a-f]{24}\.jpg$/), expect.anything(), {
+    expect(put).toHaveBeenCalledWith(expect.stringMatching(/^perfis\/[0-9a-f]{24}\.jpg$/), FOTO.arquivo, {
       httpMetadata: { contentType: "image/jpeg" },
     });
     expect(url).toMatch(/^https:\/\/fotos\.exemplo\.com\/perfis\//);

@@ -12,7 +12,7 @@ const PASTA_LOCAL = path.join(process.cwd(), "public", "enviados");
 export const usaArmazenamentoCloudflare = () => Boolean(process.env.NEXT_PUBLIC_R2_PUBLIC_URL);
 
 type BucketDeUploads = {
-  put(chave: string, conteudo: ReadableStream<Uint8Array>, opcoes: { httpMetadata: { contentType: string } }): Promise<unknown>;
+  put(chave: string, conteudo: Blob, opcoes: { httpMetadata: { contentType: string } }): Promise<unknown>;
   delete(chave: string): Promise<void>;
 };
 
@@ -48,7 +48,8 @@ export async function guardarFoto(foto: { arquivo: File; tipo: TipoDeFoto }, pas
   if (usaArmazenamentoCloudflare()) {
     const bucket = bucketDeUploads();
     if (!bucket) throw new Error("O bucket R2 UPLOADS não está conectado a este Worker.");
-    await bucket.put(nome, foto.arquivo.stream(), { httpMetadata: { contentType: foto.tipo } });
+    // O File vai inteiro: o R2 só aceita stream de tamanho conhecido.
+    await bucket.put(nome, foto.arquivo, { httpMetadata: { contentType: foto.tipo } });
     return `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL!.replace(/\/$/, "")}/${nome}`;
   }
   if (process.env.NODE_ENV === "production") {

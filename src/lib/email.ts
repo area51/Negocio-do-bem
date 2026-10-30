@@ -5,13 +5,14 @@
 // com as variáveis, porque o banco de previews só tem contas de teste.
 
 import "server-only";
+import { ambienteDeDeploy } from "@/lib/ambiente";
 
 const API_RESEND = "https://api.resend.com/emails";
 
 export type Email = { para: string; assunto: string; texto: string };
 
 function config(): { chave: string; remetente: string; resposta: string | null } | null {
-  const ambiente = process.env.DEPLOY_ENV || process.env.VERCEL_ENV;
+  const ambiente = ambienteDeDeploy();
   if (ambiente && ambiente !== "production") return null;
   const chave = process.env.RESEND_API_KEY;
   const remetente = process.env.EMAIL_REMETENTE;

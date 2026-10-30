@@ -4,13 +4,13 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
+import { ambienteDeDeploy } from "../src/lib/ambiente";
 import { gerarHashSenha } from "../src/lib/auth/senha";
 import { textoDeBusca } from "../src/lib/texto";
 
 // O build dos previews também roda o seed, nunca o de produção.
-const ambienteDeploy = process.env.DEPLOY_ENV || process.env.VERCEL_ENV;
-const emProducao = ambienteDeploy
-  ? ambienteDeploy === "production"
+const emProducao = ambienteDeDeploy()
+  ? ambienteDeDeploy() === "production"
   : process.env.NODE_ENV === "production";
 if (emProducao) {
   throw new Error("O seed cria contas com senha conhecida e não pode rodar em produção.");
@@ -196,7 +196,7 @@ const DEPOIMENTOS: { negocio: string; autor: string; texto: string; resposta?: s
 async function main() {
   // Em deploy, só preenche banco vazio. Um preview ligado por engano à produção
   // encontra usuários reais e não cria as contas de senha conhecida.
-  if ((process.env.DEPLOY_ENV || process.env.VERCEL) && (await db.usuario.count()) > 0) {
+  if ((ambienteDeDeploy() || process.env.VERCEL) && (await db.usuario.count()) > 0) {
     console.log("O banco já tem usuários. Em deploy, o seed só preenche banco vazio.");
     return;
   }

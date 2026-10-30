@@ -1,4 +1,5 @@
 import "server-only";
+import { ambienteDeDeploy } from "@/lib/ambiente";
 import { usaArmazenamentoCloudflare } from "@/lib/armazenamento";
 import { db } from "@/lib/db";
 import { envioLigado } from "@/lib/email";
@@ -67,7 +68,7 @@ export function integracoes(): Integracao[] {
 /** Em que ambiente o site está rodando e de qual commit ele veio, quando o host informa. */
 export function ambiente() {
   return {
-    nome: process.env.DEPLOY_ENV ?? process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? "desconhecido",
+    nome: ambienteDeDeploy() ?? process.env.NODE_ENV ?? "desconhecido",
     endereco: ENDERECO_DO_SITE,
     indexavel: INDEXAVEL,
     branch: process.env.VERCEL_GIT_COMMIT_REF ?? null,

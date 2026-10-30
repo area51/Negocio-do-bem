@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
+import { ambienteDeDeploy } from "./src/lib/ambiente";
 
 const desenvolvimento = process.env.NODE_ENV === "development";
-const preview = process.env.DEPLOY_ENV === "preview" || process.env.VERCEL_ENV === "preview";
+const preview = ambienteDeDeploy() === "preview";
 const ANALYTICS = "https://*.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com";
 const VERCEL_LIVE = "https://vercel.live";
 const dominioFotos = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ? ` ${new URL(process.env.NEXT_PUBLIC_R2_PUBLIC_URL).origin}` : "";
